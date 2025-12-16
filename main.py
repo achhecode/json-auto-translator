@@ -8,8 +8,8 @@ def main():
     logger.debug("That's it, beautiful and simple logging!")
     logger.info("Application started")
     logger.debug("Debug message")
-    self.app_obj = App()
-    self.app_obj.start_chrome()
+    app_obj = App()
+    app_obj.start_chrome()
 
 
 

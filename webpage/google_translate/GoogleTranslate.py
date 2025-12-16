@@ -5,22 +5,30 @@ from helper.JsonOperation import JsonOperation
 import pyperclip
 from impl.CustomSelenium import CustomSelenium
 import time
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 logger = get_logger()
 
 class GoogleTranslate:
-    def __init__(self, driver, file_path):
+    def __init__(self, driver):
         logger.info("Starting Operation On Google Translate Page!")
         self.driver = driver
-        self.file_path = file_path
 
         self.URL = "https://translate.google.com/"
 
-        self.sl_language = "en"
-        self.to_languages = ["ar", "es", "hi"]
+        self.SL_LANGUAGE = os.getenv("SOURCE_LANGUAGE", "en")
+        self.TL_LANGUAGE = os.getenv("TARGET_LANGUAGES", "ar,es,hi")
 
         # initialize objects
-        self.json_ops_obj = JsonOperation("./en.json")
+
+        FILE_PATH = os.getenv("FILE_PATH", f"./{self.SL_LANGUAGE}.json")
+        self.OUTPUT_FOLDER = os.getenv("OUTPUT_FOLDER", "") # end with /
+
+        
+        self.json_ops_obj = JsonOperation(FILE_PATH)
         self.selenium_helper_obj = CustomSelenium(driver, default_timeout=10)
     
 
@@ -33,8 +41,10 @@ class GoogleTranslate:
         all_unique_values = self.file_process()
         logger.info(all_unique_values)
 
-        for lang in self.to_languages:
-            URL = f"https://translate.google.co.in/?sl={self.sl_language}&tl={lang}&op=translate"
+        target_languages = [item.strip() for item in self.TL_LANGUAGE.split(",")]
+
+        for lang in target_languages:
+            URL = f"https://translate.google.co.in/?sl={self.SL_LANGUAGE}&tl={lang}&op=translate"
 
             self.driver.get(URL)
             translations = {}
@@ -43,7 +53,7 @@ class GoogleTranslate:
 
             self.json_ops_obj.replace_values_and_save(
                 translation_map=translations,
-                output_file=f"{lang}.json"
+                output_file=f"{self.OUTPUT_FOLDER}translations/{lang}.json"
             )
             self.wait(10)
 

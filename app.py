@@ -3,7 +3,7 @@ from logging_config import get_logger
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
-from webpage.GoogleTranslate import GoogleTranslate
+from webpage.google_translate.GoogleTranslate import GoogleTranslate
 
 logger = get_logger()
 

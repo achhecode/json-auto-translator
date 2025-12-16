@@ -16,10 +16,8 @@ class GoogleTranslate:
 
         self.URL = "https://translate.google.com/"
 
-        sl_language = "en"
-        self.to_language = "es"
-
-        self.URL = f"https://translate.google.co.in/?sl={sl_language}&tl={self.to_language}&op=translate"
+        self.sl_language = "en"
+        self.to_languages = ["ar", "es", "hi"]
 
         # initialize objects
         self.json_ops_obj = JsonOperation("./en.json")
@@ -34,16 +32,20 @@ class GoogleTranslate:
     def start(self):
         all_unique_values = self.file_process()
         logger.info(all_unique_values)
-        self.driver.get(self.URL)
-        translations = {}
-        for value in all_unique_values:
-            translations[value] = self.translate_text(value)
 
-        self.json_ops_obj.replace_values_and_save(
-            translation_map=translations,
-            output_file=f"{self.to_language}.json"
-        )
-        # self.select_languages()
+        for lang in self.to_languages:
+            URL = f"https://translate.google.co.in/?sl={self.sl_language}&tl={lang}&op=translate"
+
+            self.driver.get(URL)
+            translations = {}
+            for value in all_unique_values:
+                translations[value] = self.translate_text(value)
+
+            self.json_ops_obj.replace_values_and_save(
+                translation_map=translations,
+                output_file=f"{lang}.json"
+            )
+            self.wait(10)
 
 
     def select_languages(self):

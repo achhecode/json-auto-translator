@@ -18,5 +18,6 @@ class App:
         service = Service('./chromedriver')
         self.driver = webdriver.Chrome(service=service, options=options)
 
+        file_path = "en.json"
         # Starting operation for Google Translate Page
-        GoogleTranslate(self.driver).start()
+        GoogleTranslate(self.driver, file_path).start()

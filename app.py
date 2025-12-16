@@ -1,21 +1,22 @@
 
+from logging_config import get_logger
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from logging_config import get_logger
-from ChromeManager import ChromeManager
-
+from selenium.webdriver.chrome.options import Options
+from webpage.GoogleTranslate import GoogleTranslate
 
 logger = get_logger()
 
 class App:
     def __init__(self):
         logger.info("App Operation Initiated")
-        
+        # 1. Setup options
+        options = Options()
+        options.add_experimental_option("detach", True)  # Browser stays open
 
-    def start_chrome(self):
-        chrome = ChromeManager(headless=False)
-        chrome.open_url("https://www.google.com")
-        chrome.keep_open_lightweight()
-        chrome.close_all()
+        # 2. Create driver
+        service = Service('./chromedriver')
+        self.driver = webdriver.Chrome(service=service, options=options)
 
-
+        # Starting operation for Google Translate Page
+        GoogleTranslate(self.driver).start()

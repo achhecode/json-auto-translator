@@ -1,17 +1,8 @@
-from loguru import logger
-from logging_config import get_logger
 from app import App
 
-logger = get_logger()
-
 def main():
-    logger.debug("That's it, beautiful and simple logging!")
-    logger.info("Application started")
-    logger.debug("Debug message")
-    app_obj = App()
-    app_obj.start_chrome()
-
-
+    print("Application started")
+    App()
 
 if __name__ == "__main__":
     main()
